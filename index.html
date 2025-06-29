@@ -8,14 +8,17 @@
             gap: 8px;
             opacity: 0;
             transform: translateY(-20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI"， Roboto, Helvetica, Arial, sans-serif;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-        。custom-footer.loaded {
+        .custom-footer.loaded {
             opacity: 1;
             transform: translateY(0);
         }
-        。footer-content {
+        .custom-footer.hide-anim {
+            transition: opacity 0.05s ease, transform 0.05s ease !important;
+        }
+        .footer-content {
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-end;
@@ -24,7 +27,7 @@
             line-height: 1;
             font-size: 12px;
         }
-        。footer-module {
+        .footer-module {
             color: var(--normal-color);
             transition: color 0.2s ease;
             text-decoration: none;
@@ -34,14 +37,14 @@
             display: inline-flex;
             align-items: center;
         }
-        。footer-hover .footer-module {
+        .footer-hover .footer-module {
             color: var(--hover-color);
         }
-        。footer-module.active {
+        .footer-module.active {
             color: var(--active-color) !important;
         }
         
-        。footer-content.narrow-layout {
+        .footer-content.narrow-layout {
             flex-direction: column;
             align-items: flex-end;
             gap: 4px;
@@ -64,14 +67,20 @@
                 chpoor: "···"
             },
             links: [
-                { name: "协议条款"， url: "http://doc.auromuze.com" },
+                { name: "协议条款", url: "http://doc.auromuze.com" },
             ],
-            // 精简后的颜色配置
             colors: {
                 normal: "#6a6a6a",
                 hover: "#8a8a8a",
                 active: "#a0a0a0"
             }
+        };
+
+        // 状态管理
+        const footerState = {
+            isInitializing: true,
+            isResizing: false,
+            initialLoadComplete: false
         };
 
         // 设置颜色函数
@@ -195,18 +204,57 @@
             });
         }
 
+        // 控制页脚显示/隐藏的函数
+        function toggleFooterVisibility(show, isResizing = false) {
+            const footer = document.querySelector('.custom-footer');
+            
+            // 设置适当的动画时间
+            if (isResizing) {
+                footer.classList.add('hide-anim');
+            } else {
+                footer.classList.remove('hide-anim');
+            }
+            
+            if (show) {
+                footer.classList.add('loaded');
+            } else {
+                footer.classList.remove('loaded');
+            }
+        }
+
         // 更新版权信息
         function updateCopyright() {
+            // 先隐藏页脚
+            toggleFooterVisibility(false, footerState.isResizing);
+            
+            // 更新内容
             generateCopyright();
-            setupEventListeners(); // 每次更新后重新绑定事件
+            setupEventListeners();
+            
+            // 如果不是在调整大小，延迟显示页脚
+            if (!footerState.isResizing) {
+                setTimeout(() => {
+                    toggleFooterVisibility(true);
+                }, 50);
+            }
         }
 
         // 防抖函数
         function debounce(func, wait) {
             let timeout;
             return function() {
+                // 标记正在调整大小
+                footerState.isResizing = true;
+                toggleFooterVisibility(false, true);
+                
                 clearTimeout(timeout);
-                timeout = setTimeout(func, wait);
+                timeout = setTimeout(() => {
+                    footerState.isResizing = false;
+                    func();
+                    setTimeout(() => {
+                        toggleFooterVisibility(true);
+                    }, 300); // 等待500ms后再显示
+                }, wait);
             };
         }
 
@@ -216,13 +264,34 @@
             generateCopyright();
             setupEventListeners();
             
-            // 添加加载动画
+            // 初始加载处理
+            const checkInitialLoad = () => {
+                if (!footerState.isResizing && footerState.isInitializing) {
+                    footerState.isInitializing = false;
+                    footerState.initialLoadComplete = true;
+                    toggleFooterVisibility(true);
+                }
+            };
+            
+            // 添加加载监听
             window.addEventListener('load', () => {
-                document.querySelector('.custom-footer').classList.add('loaded');
+                checkInitialLoad();
             });
             
-            // 响应式调整
-            window.addEventListener('resize', debounce(updateCopyright, 100));
+            // 初始检查
+            setTimeout(checkInitialLoad, 100);
+            
+            // 响应式调整 - 使用防抖函数
+            window.addEventListener('resize', debounce(updateCopyright, 300));
+            
+            // 初始显示处理
+            if (!footerState.isResizing) {
+                setTimeout(() => {
+                    if (!footerState.initialLoadComplete && !footerState.isResizing) {
+                        toggleFooterVisibility(true);
+                    }
+                }, 100);
+            }
         }
 
         initFooter();
