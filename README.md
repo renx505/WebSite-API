@@ -22,7 +22,7 @@
 
 在JavaScript中修改 `footerConfig` 对象来自定义：
 
-```json
+```javascript
 
 const footerConfig = {
     copyright: {
