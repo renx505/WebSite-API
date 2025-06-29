@@ -24,23 +24,23 @@
 
 ```json
 
-        const footerConfig = {
-            copyright: {
-                blandcre: "©️",
-                year: "2024",
-                owner: "朝云忆梦 | AuroMuze",
-                text: "All rights reserved unless otherwise specified.",
-                chpoor: "···"
-            },
-            links: [
-                { name: "协议条款", url: "http://doc.auromuze.com" },
-            ],
-            colors: {
-                normal: "#6a6a6a",
-                hover: "#8a8a8a",
-                active: "#a0a0a0"
-            }
-        };
+const footerConfig = {
+    copyright: {
+        blandcre: "©️",
+        year: "2024",
+        owner: "朝云忆梦 | AuroMuze",
+        text: "All rights reserved unless otherwise specified.",
+        chpoor: "···"
+    },
+    links: [
+        { name: "协议条款", url: "http://doc.auromuze.com" },
+    ],
+    colors: {
+        normal: "#6a6a6a",
+        hover: "#8a8a8a",
+        active: "#a0a0a0"
+    }
+};
 
 ```
 
