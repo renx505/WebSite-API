@@ -1,299 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>API</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .custom-footer {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --background: #0f172a;
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-accent: #f1f5f9;
+            --glass-border: rgba(148, 163, 184, 0.2);
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--background), #1e293b);
+            color: var(--text);
+            position: relative;
+            overflow-x: hidden;
+            padding: 10px;
             display: flex;
-            align-items: flex-end;
-            justify-content: flex-end;
-            padding: 12px 10px;
-            gap: 8px;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-        .custom-footer.loaded {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .custom-footer.hide-anim {
-            transition: opacity 0.05s ease, transform 0.05s ease !important;
-        }
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
             align-items: center;
-            gap: 0 8px;
-            line-height: 1;
-            font-size: 12px;
+            justify-content: center;
         }
-        .footer-module {
-            color: var(--normal-color);
-            transition: color 0.2s ease;
+
+        /* Animated Background */
+        .bg-bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .bg-bubbles li {
+            position: absolute;
+            list-style: none;
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: rgba(129, 140, 248, 0.1);
+            bottom: -160px;
+            border-radius: 50%;
+            animation: bubble 20s infinite ease-in;
+        }
+
+        @keyframes bubble {
+            0% { 
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            100% { 
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .bg-bubbles li:nth-child(1) {
+            left: 10%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .bg-bubbles li:nth-child(2) {
+            left: 20%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 17s;
+        }
+
+        .bg-bubbles li:nth-child(3) {
+            left: 35%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 4s;
+        }
+
+        .bg-bubbles li:nth-child(4) {
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            animation-delay: 0s;
+            animation-duration: 22s;
+        }
+
+        .bg-bubbles li:nth-child(5) {
+            left: 65%;
+            width: 70px;
+            height: 70px;
+            animation-delay: 7s;
+        }
+
+        .bg-bubbles li:nth-child(6) {
+            left: 80%;
+            width: 40px;
+            height: 40px;
+            animation-delay: 3s;
+            animation-duration: 19s;
+        }
+
+        .bg-bubbles li:nth-child(7) {
+            left: 90%;
+            width: 50px;
+            height: 50px;
+            animation-delay: 5s;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            backdrop-filter: blur(12px);
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+            padding: 20px;
+            margin: 10px 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Success panel */
+        .success-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .icon-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+        }
+
+        .icon-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0px rgba(99, 102, 241, 0.8);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0px rgba(99, 102, 241, 0);
+            }
+        }
+
+        .icon-bg i {
+            font-size: 40px;
+            color: white;
+            animation: scale 1.8s infinite;
+        }
+
+        @keyframes scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            background: linear-gradient(to right, var(--text-accent), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .cta-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
             text-decoration: none;
-            white-space: nowrap;
-            font-size: inherit;
-            vertical-align: middle;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            width: 100%;
         }
-        .footer-hover .footer-module {
-            color: var(--hover-color);
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
-        .footer-module.active {
-            color: var(--active-color) !important;
+
+        .btn-primary:hover, .btn-primary:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.6);
         }
-        
-        .footer-content.narrow-layout {
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover, .btn-secondary:focus {
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--text-accent);
+        }
+
+        /* Status panel */
+        .status-panel {
+            border-radius: 16px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.03);
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            animation: pulseStatus 2s infinite;
+        }
+
+        @keyframes pulseStatus {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .status-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-accent);
+        }
+
+        .info-card {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--glass-border);
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .info-card code {
+            display: block;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            color: var(--primary-light);
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive design */
+        @media (min-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            .success-panel {
+                padding: 20px;
+            }
+            
+            .icon-container {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .icon-bg i {
+                font-size: 45px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.05rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .btn {
+                width: auto;
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .container {
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+                padding: 30px;
+                border-radius: 20px;
+            }
+            
+            .success-panel {
+                text-align: left;
+                padding: 30px;
+            }
+            
+            .icon-container {
+                width: 100px;
+                height: 100px;
+                margin: 0 0 20px 0;
+            }
+            
+            .icon-bg i {
+                font-size: 50px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: row;
+                margin: 0;
+            }
+            
+            .status-header {
+                justify-content: flex-start;
+            }
+            
+            .status-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .info-card h3 {
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                padding: 40px;
+            }
+            
+            .success-panel {
+                padding: 40px;
+            }
+            
+            .icon-container {
+                width: 120px;
+                height: 120px;
+                margin: 0 0 30px 0;
+            }
+            
+            .icon-bg i {
+                font-size: 60px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .status-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .info-card h3 {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* 防止移动端点击延迟 */
+        a, button {
+            touch-action: manipulation;
+        }
+
+        /* 优化移动端滚动体验 */
+        html {
+            -webkit-overflow-scrolling: touch;
+            overflow-scrolling: touch;
+        }
+
+        body {
+            overscroll-behavior-y: contain;
         }
     </style>
 </head>
 <body>
-    <div class="custom-footer">
-        <footer>
-            <div id="copyright" class="footer-content"></div>
-        </footer>
+    <!-- Background Bubbles -->
+    <ul class="bg-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Success Panel -->
+        <div class="success-panel">
+            <div class="icon-container">
+                <div class="icon-bg">
+                    <i class="fas fa-server"></i>
+                </div>
+            </div>
+            <h1>API服务提供中...</h1>
+            <p class="subtitle">
+                API 服务由「朝云忆梦｜AuroMuze」部署与维护，同时提供相应的技术支持
+            </p>
+            <div class="cta-buttons">
+                <a href="https://auromuze.com" class="btn btn-primary">
+                    <i class="fas fa-play"></i> 访问主站
+                </a>
+                <a href="https://github.com/renx505" class="btn btn-secondary">
+                    <i class="fas fa-book"></i> 开源代码
+                </a>
+            </div>
+        </div>
+        <!-- Status Panel -->
+        <div class="status-panel">
+            <div class="status-header">
+                <div class="status-indicator"></div>
+                <h2>API服务状态</h2>
+            </div>
+            
+            <div class="info-card">
+                <h3><i class="fas fa-server"></i> 服务状态</h3>
+                <p>当您成功访问本网页即表示服务运行正常且响应时间稳定</p>
+            </div>
+            
+            <div class="info-card">
+                <h3><i class="fas fa-shield-alt"></i> 安全状态</h3>
+                <p>当您成功访问本网页即表示所有安全配置已启用</p>
+            </div>
+            
+            <div class="info-card">
+                <h3><i class="fas fa-terminal"></i> 开源代码</h3>
+                <p>本系统代码将会在 github 上进行开源 - MIT 协议许可</p>
+                <code>https://github.com/renx505</code>
+            </div>
+        </div>
     </div>
+    
     <script>
-        const footerConfig = {
-            copyright: {
-                blandcre: "©️",
-                year: "2024",
-                owner: "朝云忆梦 | AuroMuze",
-                text: "All rights reserved unless otherwise specified.",
-                chpoor: "···"
-            },
-            links: [
-                { name: "协议条款", url: "http://doc.auromuze.com" },
-            ],
-            colors: {
-                normal: "#6a6a6a",
-                hover: "#8a8a8a",
-                active: "#a0a0a0"
-            }
-        };
-
-        // 状态管理
-        const footerState = {
-            isInitializing: true,
-            isResizing: false,
-            initialLoadComplete: false
-        };
-
-        // 设置颜色函数
-        function setColors() {
-            const { normal, hover, active } = footerConfig.colors;
-            document.documentElement.style.setProperty('--normal-color', normal);
-            document.documentElement.style.setProperty('--hover-color', hover);
-            document.documentElement.style.setProperty('--active-color', active);
-        }
-
-        // 动态获取当前年份
-        const currentYear = new Date().getFullYear();
-        const configYear = parseInt(footerConfig.copyright.year, 10);
-        
-        // 生成年份显示文本
-        function getYearDisplay() {
-            if (configYear === 0 || configYear === currentYear) {
-                return currentYear.toString();
-            } else if (configYear < currentYear) {
-                return `${configYear}-${currentYear}`;
-            }
-            return "0000";
-        }
-
-        // 生成版权信息
-        function generateCopyright() {
-            const yearDisplay = getYearDisplay();
-            const copyrightBase = `${footerConfig.copyright.blandcre}${yearDisplay}「${footerConfig.copyright.owner}」`;
+        // 添加背景气泡的JS代码
+        document.addEventListener('DOMContentLoaded', function() {
+            const bubbles = document.querySelector('.bg-bubbles');
+            const bubbleCount = 12;
             
-            const copyrightElement = document.getElementById('copyright');
-            copyrightElement.innerHTML = '';
-            
-            // 判断屏幕布局
-            const screenWidth = window.innerWidth;
-            const useNarrowLayout = screenWidth < 480;
-            
-            // 创建内容容器
-            const contentWrapper = document.createElement('div');
-            contentWrapper.className = 'footer-content' + (useNarrowLayout ? ' narrow-layout' : '');
-            
-            // 第一部分：版权基础信息
-            const part1 = document.createElement('span');
-            part1.className = 'footer-module';
-            part1.dataset.type = 'p1';
-            part1.textContent = copyrightBase;
-            contentWrapper.appendChild(part1);
-            
-            // 非窄屏模式下添加其他内容
-            if (!useNarrowLayout) {
-                // 第二部分：文本内容
-                const part2 = document.createElement('span');
-                part2.className = 'footer-module';
-                part2.dataset.type = 'p2';
+            for (let i = 0; i < bubbleCount; i++) {
+                const li = document.createElement('li');
+                const left = Math.floor(Math.random() * 100);
+                const size = Math.floor(Math.random() * 60) + 20;
+                const duration = Math.floor(Math.random() * 20) + 10;
+                const delay = Math.floor(Math.random() * 10);
                 
-                // 中屏模式下显示省略号
-                if (screenWidth <= 768) {
-                    part2.textContent = footerConfig.copyright.chpoor;
-                } 
-                // 宽屏模式下显示完整文本
-                else {
-                    part2.textContent = footerConfig.copyright.text;
-                }
+                li.style.left = `${left}%`;
+                li.style.width = `${size}px`;
+                li.style.height = `${size}px`;
+                li.style.animationDuration = `${duration}s`;
+                li.style.animationDelay = `${delay}s`;
+                li.style.opacity = Math.random() * 0.3 + 0.1;
                 
-                contentWrapper.appendChild(part2);
-                
-                // 分隔符
-                const separator = document.createElement('span');
-                separator.className = 'footer-module';
-                separator.dataset.type = 'p2';
-                separator.textContent = ' | ';
-                contentWrapper.appendChild(separator);
+                bubbles.appendChild(li);
             }
             
-            // 第三部分：链接
-            footerConfig.links.forEach((link, index) => {
-                const linkElement = document.createElement('a');
-                linkElement.className = 'footer-module';
-                linkElement.dataset.type = 'p3';
-                linkElement.href = link.url;
-                linkElement.textContent = link.name;
-                contentWrapper.appendChild(linkElement);
-            });
-            
-            copyrightElement.appendChild(contentWrapper);
-        }
-
-        // 更新悬停状态
-        function updateFooterHoverState(isHovering) {
-            const container = document.querySelector('.custom-footer');
-            if (isHovering) {
-                container.classList.add('footer-hover');
-            } else {
-                container.classList.remove('footer-hover');
-                // 移除所有active状态
-                document.querySelectorAll('.footer-module').forEach(m => {
-                    m.classList.remove('active');
+            // 添加鼠标移动时的视差效果（仅在非触摸设备上）
+            if (!('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+                document.addEventListener('mousemove', function(e) {
+                    const x = (e.clientX / window.innerWidth) - 0.5;
+                    const y = (e.clientY / window.innerHeight) - 0.5;
+                    
+                    document.querySelector('.container').style.transform = 
+                        `translate(${x * 10}px, ${y * 10}px)`;
                 });
             }
-        }
-
-        // 设置事件监听器
-        function setupEventListeners() {
-            const container = document.querySelector('.custom-footer');
-            const copyright = document.getElementById('copyright');
-            
-            // 容器整体悬停状态
-            container.addEventListener('mouseenter', () => updateFooterHoverState(true));
-            container.addEventListener('mouseleave', () => updateFooterHoverState(false));
-            
-            // 模块悬浮事件
-            copyright.addEventListener('mouseover', (e) => {
-                const module = e.target.closest('.footer-module');
-                if (module) {
-                    // 移除其他模块的active状态
-                    document.querySelectorAll('.footer-module').forEach(m => {
-                        if (m !== module) m.classList.remove('active');
-                    });
-                    // 添加当前模块的active状态
-                    module.classList.add('active');
-                }
-            });
-        }
-
-        // 控制页脚显示/隐藏的函数
-        function toggleFooterVisibility(show, isResizing = false) {
-            const footer = document.querySelector('.custom-footer');
-            
-            // 设置适当的动画时间
-            if (isResizing) {
-                footer.classList.add('hide-anim');
-            } else {
-                footer.classList.remove('hide-anim');
-            }
-            
-            if (show) {
-                footer.classList.add('loaded');
-            } else {
-                footer.classList.remove('loaded');
-            }
-        }
-
-        // 更新版权信息
-        function updateCopyright() {
-            // 先隐藏页脚
-            toggleFooterVisibility(false, footerState.isResizing);
-            
-            // 更新内容
-            generateCopyright();
-            setupEventListeners();
-            
-            // 如果不是在调整大小，延迟显示页脚
-            if (!footerState.isResizing) {
-                setTimeout(() => {
-                    toggleFooterVisibility(true);
-                }, 50);
-            }
-        }
-
-        // 防抖函数
-        function debounce(func, wait) {
-            let timeout;
-            return function() {
-                // 标记正在调整大小
-                footerState.isResizing = true;
-                toggleFooterVisibility(false, true);
-                
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    footerState.isResizing = false;
-                    func();
-                    setTimeout(() => {
-                        toggleFooterVisibility(true);
-                    }, 300); // 等待500ms后再显示
-                }, wait);
-            };
-        }
-
-        // 初始化
-        function initFooter() {
-            setColors();
-            generateCopyright();
-            setupEventListeners();
-            
-            // 初始加载处理
-            const checkInitialLoad = () => {
-                if (!footerState.isResizing && footerState.isInitializing) {
-                    footerState.isInitializing = false;
-                    footerState.initialLoadComplete = true;
-                    toggleFooterVisibility(true);
-                }
-            };
-            
-            // 添加加载监听
-            window.addEventListener('load', () => {
-                checkInitialLoad();
-            });
-            
-            // 初始检查
-            setTimeout(checkInitialLoad, 100);
-            
-            // 响应式调整 - 使用防抖函数
-            window.addEventListener('resize', debounce(updateCopyright, 300));
-            
-            // 初始显示处理
-            if (!footerState.isResizing) {
-                setTimeout(() => {
-                    if (!footerState.initialLoadComplete && !footerState.isResizing) {
-                        toggleFooterVisibility(true);
-                    }
-                }, 100);
-            }
-        }
-
-        initFooter();
+        });
     </script>
 </body>
+</html>
