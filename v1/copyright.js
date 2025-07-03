@@ -1,6 +1,6 @@
 // 创建样式元素
 const style = document.createElement('style');
-style.textContent = `
+style。textContent = `
 footer {
     cursor: default !important;
     user-select: none !important;
@@ -78,7 +78,6 @@ const footerConfig = {
     },
     links: [
         { name: "协议条款", url: "http://doc.auromuze.com" },
-        { name: "开源服务", url: "http://api.auromuze.com" },
     ],
     colors: {
         normal: "#6a6a6a",
