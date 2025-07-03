@@ -1,6 +1,6 @@
 // 创建样式元素
 const style = document.createElement('style');
-style。textContent = `
+style.textContent = `
 footer {
     cursor: default !important;
     user-select: none !important;
@@ -164,15 +164,20 @@ function generateCopyright() {
         contentWrapper.appendChild(separator);
     }
     
-    // 第三部分：链接
+    // 第三部分：链接容器
+    const linksContainer = document.createElement('div');
+    linksContainer.className = 'links-container';
+    
+    // 添加所有链接
     footerConfig.links.forEach((link, index) => {
         const linkElement = document.createElement('a');
         linkElement.className = 'footer-module';
         linkElement.dataset.type = 'p3';
         linkElement.href = link.url;
         linkElement.textContent = link.name;
-        contentWrapper.appendChild(linkElement);
+        linksContainer.appendChild(linkElement);
     });
+    contentWrapper.appendChild(linksContainer);
     
     copyrightElement.appendChild(contentWrapper);
 }
@@ -190,6 +195,26 @@ function updateFooterHoverState(isHovering) {
         });
     }
 }
+
+// 添加响应式样式
+const style = document.createElement('style');
+style.textContent = `
+.links-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow-x: auto;
+}
+@media (max-width: 768px) {
+    .custom-footer {
+        flex-direction: column;
+    }
+    .links-container {
+        margin-top: 8px;
+        padding-top: 8px;
+    }
+}`;
+document.head.appendChild(style);
 
 // 设置事件监听器
 function setupEventListeners() {
