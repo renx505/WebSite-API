@@ -20,7 +20,7 @@
 
 ## 配置选项
 
-在JavaScript中修改 `footerConfig` 对象来自定义：
+在copyright.js - JavaScript中修改 `footerConfig` 对象来自定义：
 
 ```javascript
 
@@ -41,6 +41,13 @@ const footerConfig = {
         active: "#a0a0a0"
     }
 };
+
+```
+在现有项目中引用：
+
+```html
+
+<noscript><div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);" oncontextmenu="return false;"><h1 style="font-size: 24px; color: #333; margin-bottom: 10px;">请启用JavaScript以使用本页面</h1><p style="font-size: 16px; color: #666; text-align: center; max-width: 400px;">您的浏览器已禁用JavaScript。请在浏览器设置中启用JavaScript以继续使用本页面的功能。</p></div></noscript><script src="https://api.yourname.com/copyright.js"></script>
 
 ```
 
