@@ -1,6 +1,6 @@
 // 创建样式元素
 const style = document.createElement('style');
-style。textContent = `
+style.textContent = `
 footer {
     cursor: default !important;
     user-select: none !important;
@@ -78,6 +78,7 @@ const footerConfig = {
     },
     links: [
         { name: "协议条款", url: "http://doc.auromuze.com" },
+        { name: "开源服务", url: "http://api.auromuze.com" },
     ],
     colors: {
         normal: "#6a6a6a",
@@ -268,7 +269,7 @@ function debounce(func, wait) {
             setTimeout(() => {
                 toggleFooterVisibility(true);
             }, 300); // 等待500ms后再显示
-        }， wait);
+        }, wait);
     };
 }
 
@@ -294,7 +295,7 @@ function initFooter() {
     
     // 禁止F12调试
     document.addEventListener('keydown', function(e) {
-      if (e。key === 'F12' || (e。ctrlKey && e.shiftKey && e.key === 'I') || (e。ctrlKey && e.shiftKey && e.key === 'J') || (e。ctrlKey && e.key === 'U')) {
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
         e.preventDefault();
       }
     });
@@ -314,10 +315,10 @@ function initFooter() {
     });
     
     // 初始检查
-    setTimeout(checkInitialLoad， 100);
+    setTimeout(checkInitialLoad, 100);
     
     // 响应式调整 - 使用防抖函数
-    window.addEventListener('resize', debounce(updateCopyright， 300));
+    window.addEventListener('resize', debounce(updateCopyright, 300));
     
     // 初始显示处理
     if (!footerState.isResizing) {
@@ -328,6 +329,8 @@ function initFooter() {
         }, 100);
     }
 }
+
+
 
 // 立即执行初始化
 initFooter();
