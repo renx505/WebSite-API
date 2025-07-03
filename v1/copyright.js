@@ -1,6 +1,6 @@
 // 创建样式元素
 const style = document.createElement('style');
-style.textContent = `
+style。textContent = `
 footer {
     cursor: default !important;
     user-select: none !important;
